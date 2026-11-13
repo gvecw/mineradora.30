@@ -1,0 +1,2371 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MINERADORA 3.0</title>
+  <style>
+    :root {
+      --bg-main: #0b0f19;
+      --bg-card: #131b2e;
+      --bg-card-hover: #19233c;
+      --bg-input: #0d1322;
+      --border: #263554;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-primary);
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .container {
+      max-width: 1320px;
+      margin: 0 auto;
+    }
+
+    /* TOPO E NAVEGAÇÃO EM 3 ABAS */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      background: linear-gradient(135deg, #131b2e 0%, #0f172a 100%);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-logo {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 800;
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(59, 130, 246, 0.45);
+    }
+
+    .brand h1 {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      color: #ffffff;
+    }
+
+    .brand p {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    .tabs-nav {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      cursor: pointer;
+      background: var(--bg-input);
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 22px;
+      font-size: 16px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .tab-btn:hover {
+      color: #fff;
+      border-color: #475569;
+    }
+
+    .tab-btn.active {
+      background: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+      box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
+    }
+
+    .tab-count {
+      background: rgba(0, 0, 0, 0.28);
+      padding: 2px 9px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .tab-section {
+      display: none;
+    }
+
+    .tab-section.active {
+      display: block;
+    }
+
+    /* ABA 1: MINERAR */
+    .minerar-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 960px) {
+      .minerar-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 26px;
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.28);
+    }
+
+    .step-block {
+      margin-bottom: 22px;
+    }
+
+    .step-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #e2e8f0;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .step-number {
+      background: var(--accent);
+      color: #fff;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    textarea.big-textarea {
+      width: 100%;
+      height: 170px;
+      background: var(--bg-input);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      color: var(--text-primary);
+      padding: 16px;
+      font-size: 17px;
+      font-family: inherit;
+      line-height: 1.5;
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    textarea.big-textarea::placeholder {
+      color: #64748b;
+    }
+
+    textarea.big-textarea:focus,
+    input:focus,
+    select:focus {
+      border-color: var(--accent);
+    }
+
+    .pages-selector {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .pages-selector input[type="number"] {
+      width: 120px;
+      background: var(--bg-input);
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      color: var(--text-primary);
+      padding: 12px 14px;
+      font-size: 18px;
+      font-weight: 700;
+      text-align: center;
+      outline: none;
+    }
+
+    .pages-hint {
+      color: var(--text-secondary);
+      font-size: 15px;
+    }
+
+    .btn-minerar-big {
+      width: 100%;
+      cursor: pointer;
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      color: #ffffff;
+      border: none;
+      border-radius: 14px;
+      padding: 18px 24px;
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: 0.6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      box-shadow: 0 8px 24px rgba(37, 99, 235, 0.45);
+      transition: all 0.2s;
+    }
+
+    .btn-minerar-big:hover:not(:disabled) {
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      transform: translateY(-2px);
+    }
+
+    .btn-minerar-big:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    /* CARDS DE PROGRESSO */
+    .progress-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .progress-header h2 {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .status-pill {
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 700;
+      background: rgba(148, 163, 184, 0.15);
+      color: #cbd5e1;
+    }
+
+    .status-pill.running {
+      background: rgba(59, 130, 246, 0.25);
+      color: #60a5fa;
+    }
+
+    .status-pill.done {
+      background: rgba(16, 185, 129, 0.22);
+      color: #34d399;
+    }
+
+    .status-pill.error {
+      background: rgba(239, 68, 68, 0.25);
+      color: #f87171;
+    }
+
+    .progress-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .prog-card {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+    }
+
+    .prog-card-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+    }
+
+    .prog-card-value {
+      font-size: 22px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-top: 4px;
+    }
+
+    .prog-card-sub {
+      font-size: 13px;
+      color: #93c5fd;
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .progress-bar-wrap {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      height: 18px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #3b82f6, #10b981);
+      transition: width 0.35s ease;
+    }
+
+    .progress-caption {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 14px;
+    }
+
+    .red-warning-box {
+      display: none;
+      background: rgba(239, 68, 68, 0.16);
+      border: 2px solid #ef4444;
+      color: #fecaca;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .finish-banner {
+      display: none;
+      background: rgba(16, 185, 129, 0.15);
+      border: 2px solid #10b981;
+      border-radius: 14px;
+      padding: 18px 20px;
+      margin-top: 14px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .finish-banner-text {
+      font-size: 18px;
+      font-weight: 800;
+      color: #6ee7b7;
+    }
+
+    .btn-ver-resultados {
+      cursor: pointer;
+      background: #10b981;
+      color: #06281e;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 20px;
+      font-size: 16px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-ver-resultados:hover {
+      background: #34d399;
+    }
+
+    /* BARRA DE FILTROS (ABA RESULTADOS & FAVORITAS) */
+    .filters-bar {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 20px;
+      margin-bottom: 22px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .filters-group {
+      display: flex;
+      align-items: flex-end;
+      gap: 12px;
+      flex-wrap: wrap;
+      flex: 1;
+    }
+
+    .filter-item {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .filter-item label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-secondary);
+    }
+
+    .filter-item input,
+    .filter-item select {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text-primary);
+      padding: 11px 14px;
+      font-size: 15px;
+      outline: none;
+    }
+
+    .btn-action {
+      cursor: pointer;
+      border-radius: 10px;
+      padding: 11px 15px;
+      font-size: 14.5px;
+      font-weight: 700;
+      border: 1px solid var(--border);
+      background: var(--bg-input);
+      color: var(--text-primary);
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn-action:hover:not(:disabled) {
+      border-color: #64748b;
+    }
+
+    .btn-action:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .btn-action.active-lowticket {
+      background: rgba(16, 185, 129, 0.22);
+      border-color: #10b981;
+      color: #6ee7b7;
+    }
+
+    .btn-action.active-hidden {
+      background: rgba(245, 158, 11, 0.22);
+      border-color: #f59e0b;
+      color: #fde68a;
+    }
+
+    .btn-action.active-wa {
+      background: rgba(59, 130, 246, 0.22);
+      border-color: #3b82f6;
+      color: #93c5fd;
+    }
+
+    .btn-reclassificar {
+      background: rgba(139, 92, 246, 0.2);
+      border-color: rgba(139, 92, 246, 0.5);
+      color: #ddd6fe;
+    }
+
+    .btn-reclassificar:hover:not(:disabled) {
+      background: #7c3aed;
+      color: #fff;
+    }
+
+    .btn-clear-db {
+      background: rgba(239, 68, 68, 0.14);
+      border-color: rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+    }
+
+    .btn-clear-db:hover:not(:disabled) {
+      background: #ef4444;
+      color: #fff;
+    }
+
+    /* BARRA DE PROGRESSO DA RECLASSIFICAÇÃO */
+    .reclass-banner {
+      display: none;
+      background: #172036;
+      border: 1px solid #3b82f6;
+      border-radius: 12px;
+      padding: 14px 18px;
+      margin-bottom: 18px;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .reclass-banner-top {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14.5px;
+      font-weight: 700;
+      color: #93c5fd;
+    }
+
+    /* GRID DE CARDS DE ANUNCIANTES: NO MÁXIMO 3 POR LINHA */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    @media (max-width: 1100px) {
+      .cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 720px) {
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* CARD SIMPLIFICADO COM CRIATIVO NO TOPO */
+    .ad-card {
+      position: relative;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 24px 24px 20px 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 16px;
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.28);
+      transition: transform 0.15s, border-color 0.15s;
+    }
+
+    .ad-card:hover {
+      transform: translateY(-2px);
+      border-color: #3b82f6;
+    }
+
+    .ad-card.card-escondido {
+      border-color: rgba(239, 68, 68, 0.45);
+      background: #161826;
+    }
+
+    /* 5. Estrelinha pequena no canto para favoritar */
+    .star-corner-btn {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      z-index: 3;
+      cursor: pointer;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      width: 38px;
+      height: 38px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      line-height: 1;
+      opacity: 0.7;
+      transition: all 0.2s;
+    }
+
+    .star-corner-btn:hover {
+      opacity: 1;
+      border-color: #fbbf24;
+      transform: scale(1.06);
+    }
+
+    .star-corner-btn.is-fav {
+      opacity: 1;
+      background: rgba(245, 158, 11, 0.22);
+      border-color: #f59e0b;
+      box-shadow: 0 0 12px rgba(245, 158, 11, 0.35);
+    }
+
+    /* CRIATIVO NO TOPO DO CARD (9:16 pequeno e fixo, sem esticar) */
+    .creative-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .creative-frame {
+      position: relative;
+      width: 148px;
+      height: 263px; /* Proporção vertical 9:16 exata */
+      background: #070b13;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+    }
+
+    .creative-media {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #05080f;
+      display: block;
+    }
+
+    .creative-video-thumb-wrap {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .play-overlay-btn {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: rgba(37, 99, 235, 0.88);
+      border: 2px solid #ffffff;
+      color: #ffffff;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-left: 3px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.65);
+      transition: transform 0.15s, background 0.15s;
+      pointer-events: none;
+    }
+
+    .creative-video-thumb-wrap:hover .play-overlay-btn {
+      transform: scale(1.1);
+      background: #3b82f6;
+    }
+
+    .creative-expired-box {
+      padding: 12px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: var(--text-secondary);
+      font-size: 12.5px;
+    }
+
+    .btn-refresh-creative {
+      cursor: pointer;
+      background: rgba(59, 130, 246, 0.2);
+      border: 1px solid #3b82f6;
+      color: #93c5fd;
+      border-radius: 8px;
+      padding: 7px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      transition: all 0.15s;
+    }
+
+    .btn-refresh-creative:hover:not(:disabled) {
+      background: #3b82f6;
+      color: #ffffff;
+    }
+
+    .btn-refresh-creative:disabled {
+      opacity: 0.5;
+      cursor: wait;
+    }
+
+    /* Barra abaixo do vídeo: setinhas ◀ ▶ e botão ⬇️ Baixar */
+    .creative-controls-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      min-height: 28px;
+    }
+
+    .btn-nav-arrow {
+      cursor: pointer;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      color: #cbd5e1;
+      border-radius: 7px;
+      width: 28px;
+      height: 26px;
+      font-size: 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+
+    .btn-nav-arrow:hover {
+      border-color: #60a5fa;
+      color: #fff;
+    }
+
+    .creative-counter {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      min-width: 34px;
+      text-align: center;
+    }
+
+    .btn-download-creative {
+      text-decoration: none;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      color: #cbd5e1;
+      border-radius: 7px;
+      padding: 3px 9px;
+      font-size: 12px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s;
+    }
+
+    .btn-download-creative:hover {
+      border-color: #10b981;
+      color: #6ee7b7;
+    }
+
+    /* 1. Nome da oferta (page_name) em destaque */
+    .offer-title {
+      font-size: 22px;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1.3;
+      word-break: break-word;
+    }
+
+    /* 2. Selo de tipo: "📄 PDF / Digital" (verde) ou "Outro" (cinza) */
+    .type-badge {
+      display: inline-flex;
+      align-items: center;
+      align-self: flex-start;
+      gap: 6px;
+      padding: 5px 13px;
+      border-radius: 999px;
+      font-size: 14.5px;
+      font-weight: 800;
+      margin-top: 10px;
+    }
+
+    .type-badge.digital {
+      background: rgba(16, 185, 129, 0.18);
+      border: 1px solid rgba(16, 185, 129, 0.55);
+      color: #6ee7b7;
+    }
+
+    .type-badge.outro {
+      background: rgba(148, 163, 184, 0.15);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      color: #cbd5e1;
+    }
+
+    .type-badge.whatsapp {
+      background: rgba(16, 185, 129, 0.22);
+      border: 1px solid #10b981;
+      color: #34d399;
+    }
+
+    /* 3. Status: "🟢 Ativa há X dias" */
+    .active-status-line {
+      font-size: 17px;
+      font-weight: 700;
+      color: #e2e8f0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* 4. Dois botões lado a lado: "Biblioteca" e "Página" */
+    .card-buttons-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .btn-card-main {
+      text-decoration: none;
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      text-align: center;
+    }
+
+    .btn-bib {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      color: #e2e8f0;
+    }
+
+    .btn-bib:hover {
+      border-color: #60a5fa;
+      color: #ffffff;
+      background: #17223b;
+    }
+
+    .btn-pag {
+      background: var(--accent);
+      border: 1px solid var(--accent);
+      color: #ffffff;
+    }
+
+    .btn-pag:hover {
+      background: var(--accent-hover);
+    }
+
+    .btn-pag-disabled {
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #64748b;
+      cursor: not-allowed;
+    }
+
+    /* Rodapé "+ detalhes" fechado por padrão */
+    .details-footer {
+      border-top: 1px solid rgba(38, 53, 84, 0.7);
+      padding-top: 11px;
+    }
+
+    .details-toggle-link {
+      cursor: pointer;
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 14px;
+      font-weight: 700;
+      padding: 0;
+      transition: color 0.15s;
+    }
+
+    .details-toggle-link:hover {
+      color: #93c5fd;
+    }
+
+    .details-drawer {
+      display: none;
+      margin-top: 12px;
+      padding: 14px 16px;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-size: 14px;
+      color: #cbd5e1;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .details-drawer.open {
+      display: flex;
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      border-bottom: 1px solid rgba(38, 53, 84, 0.5);
+      padding-bottom: 6px;
+    }
+
+    .detail-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .detail-label {
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    .detail-val {
+      color: #ffffff;
+      font-weight: 700;
+      text-align: right;
+    }
+
+    /* SELOS DENTRO DO + DETALHES */
+    .badges-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .seal {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 12.5px;
+      font-weight: 800;
+    }
+
+    .seal-validada {
+      background: rgba(249, 115, 22, 0.2);
+      border: 1px solid rgba(249, 115, 22, 0.5);
+      color: #fdba74;
+    }
+
+    .seal-nova {
+      background: rgba(56, 189, 248, 0.18);
+      border: 1px solid rgba(56, 189, 248, 0.45);
+      color: #7dd3fc;
+    }
+
+    .seal-escalando {
+      background: rgba(16, 185, 129, 0.2);
+      border: 1px solid rgba(16, 185, 129, 0.5);
+      color: #6ee7b7;
+    }
+
+    .seal-lowticket {
+      background: rgba(16, 185, 129, 0.22);
+      border: 1px solid #10b981;
+      color: #6ee7b7;
+    }
+
+    .seal-sempreco {
+      background: rgba(245, 158, 11, 0.2);
+      border: 1px solid #f59e0b;
+      color: #fde68a;
+    }
+
+    .seal-escondido-motivo {
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid #ef4444;
+      color: #fca5a5;
+    }
+
+    /* ABA FAVORITAS: CONTROLES DENTRO DO + DETALHES */
+    .fav-summary-counter {
+      font-size: 18px;
+      font-weight: 800;
+      color: #fde68a;
+    }
+
+    .fav-status-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .fav-status-select {
+      flex: 1;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: #fff;
+      padding: 9px 12px;
+      font-size: 14.5px;
+      font-weight: 700;
+    }
+
+    .btn-remove-fav {
+      cursor: pointer;
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+      border-radius: 10px;
+      padding: 9px 13px;
+      font-size: 13.5px;
+      font-weight: 700;
+    }
+
+    .btn-remove-fav:hover {
+      background: #ef4444;
+      color: #fff;
+    }
+
+    .fav-note-textarea {
+      width: 100%;
+      height: 74px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text-primary);
+      padding: 10px 12px;
+      font-size: 14px;
+      font-family: inherit;
+      resize: vertical;
+      margin-top: 6px;
+    }
+
+    .save-note-indicator {
+      font-size: 12px;
+      color: #34d399;
+      min-height: 16px;
+    }
+
+    .empty-state {
+      grid-column: 1 / -1;
+      background: var(--bg-card);
+      border: 1px dashed var(--border);
+      border-radius: 16px;
+      padding: 48px 24px;
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- BARRA DO TOPO COM 3 ABAS -->
+    <header class="top-bar">
+      <div class="brand">
+        <div class="brand-logo">M3</div>
+        <div>
+          <h1>MINERADORA 3.0</h1>
+          <p>Buscador Inteligente de Ofertas Low Ticket Escaladas</p>
+        </div>
+      </div>
+
+      <nav class="tabs-nav">
+        <button id="tabBtnMinerar" class="tab-btn active" onclick="mudarAba('minerar')">
+          🚀 MINERAR
+        </button>
+        <button id="tabBtnResultados" class="tab-btn" onclick="mudarAba('resultados')">
+          📊 RESULTADOS <span id="badgeCountResultados" class="tab-count">0</span>
+        </button>
+        <button id="tabBtnFavoritas" class="tab-btn" onclick="mudarAba('favoritas')">
+          FAVORITAS ⭐ <span id="badgeCountFavoritas" class="tab-count">0</span>
+        </button>
+      </nav>
+    </header>
+
+    <!-- ==========================================
+         ABA 1: MINERAR
+    =========================================== -->
+    <section id="secMinerar" class="tab-section active">
+      <div class="minerar-grid">
+        <!-- PASSO A PASSO -->
+        <div class="panel">
+          <div class="step-block">
+            <div class="step-title">
+              <span class="step-number">1</span>
+              <span>1. Escreva as palavras-chave (uma por linha)</span>
+            </div>
+            <textarea
+              id="inputPalavras"
+              class="big-textarea"
+              placeholder="moldes pdf&#10;apostila digital&#10;curso de crochê"
+            ></textarea>
+          </div>
+
+          <div class="step-block">
+            <div class="step-title">
+              <span class="step-number">2</span>
+              <span>2. Escolha quantas páginas por palavra</span>
+            </div>
+            <div class="pages-selector">
+              <input type="number" id="inputPaginas" value="10" min="1" max="20" />
+              <span class="pages-hint">Padrão: 10 páginas (máximo 20 por palavra)</span>
+            </div>
+          </div>
+
+          <div class="step-block" style="margin-bottom: 0;">
+            <div class="step-title">
+              <span class="step-number">3</span>
+              <span>3. Clique em MINERAR</span>
+            </div>
+            <button id="btnMinerar" class="btn-minerar-big" onclick="iniciarMineracao()">
+              🔍 MINERAR AGORA
+            </button>
+          </div>
+        </div>
+
+        <!-- PAINEL DE PROGRESSO VISUAL -->
+        <div class="panel">
+          <div class="progress-header">
+            <h2>Acompanhamento da Mineração</h2>
+            <span id="statusPill" class="status-pill">Pronto para começar</span>
+          </div>
+
+          <!-- Aviso vermelho explicativo -->
+          <div id="boxAvisoVermelho" class="red-warning-box"></div>
+
+          <div class="progress-cards-grid">
+            <div class="prog-card">
+              <div class="prog-card-label">Palavra Atual</div>
+              <div id="cardPalavraIndice" class="prog-card-value">0 de 0</div>
+              <div id="cardPalavraTexto" class="prog-card-sub">Nenhuma em execução</div>
+            </div>
+
+            <div class="prog-card">
+              <div class="prog-card-label">Página Atual</div>
+              <div id="cardPaginaAtual" class="prog-card-value">0 de 10</div>
+              <div class="prog-card-sub">Buscando na biblioteca</div>
+            </div>
+
+            <div class="prog-card">
+              <div class="prog-card-label">Anúncios Salvos</div>
+              <div id="cardSalvos" class="prog-card-value" style="color: #34d399;">0</div>
+              <div class="prog-card-sub">Páginas de vendas válidas</div>
+            </div>
+
+            <div class="prog-card">
+              <div class="prog-card-label">Descartados</div>
+              <div id="cardDescartados" class="prog-card-value" style="color: #94a3b8;">0</div>
+              <div class="prog-card-sub">Lojas grandes / sem site</div>
+            </div>
+          </div>
+
+          <div class="progress-bar-wrap">
+            <div id="barraProgresso" class="progress-bar-fill"></div>
+          </div>
+          <div id="legendaProgresso" class="progress-caption">
+            Aguardando você clicar em MINERAR...
+          </div>
+
+          <div id="bannerConcluido" class="finish-banner">
+            <div id="textoConcluido" class="finish-banner-text">
+              Mineração concluída: 0 anunciantes novos
+            </div>
+            <button class="btn-ver-resultados" onclick="mudarAba('resultados')">
+              📊 Ver resultados ➔
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         ABA 2: RESULTADOS
+    =========================================== -->
+    <section id="secResultados" class="tab-section">
+      <!-- Banner de progresso do botão Reclassificar tudo -->
+      <div id="bannerReclassificacao" class="reclass-banner">
+        <div class="reclass-banner-top">
+          <span id="textoReclassificacao">Reclassificando páginas dos anunciantes...</span>
+          <span id="contadorReclassificacao">0 / 0</span>
+        </div>
+        <div class="progress-bar-wrap" style="margin-bottom: 0; height: 12px;">
+          <div id="barraReclassificacao" class="progress-bar-fill"></div>
+        </div>
+      </div>
+
+      <div class="filters-bar">
+        <div class="filters-group">
+          <div class="filter-item" style="min-width: 210px; flex: 1;">
+            <label for="filtroBusca">Buscar por nome</label>
+            <input
+              type="text"
+              id="filtroBusca"
+              placeholder="Digite o nome do anunciante..."
+              oninput="renderizarResultados()"
+            />
+          </div>
+
+          <div class="filter-item">
+            <label for="filtroOrdenar">Ordenar por</label>
+            <select id="filtroOrdenar" onchange="renderizarResultados()">
+              <option value="max_dias_rodando">Mais dias rodando</option>
+              <option value="anuncios_salvos">Mais anúncios salvos</option>
+              <option value="maior_duplicacao">Maior duplicação</option>
+            </select>
+          </div>
+
+          <div class="filter-item">
+            <label for="filtroDiasMin">Dias mín.</label>
+            <input
+              type="number"
+              id="filtroDiasMin"
+              value="0"
+              min="0"
+              style="width: 95px;"
+              oninput="renderizarResultados()"
+            />
+          </div>
+
+          <!-- Filtro Só LOW TICKET ligado por padrão -->
+          <button
+            id="btnFiltroLowTicket"
+            class="btn-action active-lowticket"
+            onclick="alternarFiltroLowTicket()"
+          >
+            🎯 Só LOW TICKET: ON
+          </button>
+
+          <!-- Botão Ver escondidos -->
+          <button
+            id="btnVerEscondidos"
+            class="btn-action"
+            onclick="alternarVerEscondidos()"
+          >
+            👁️ Ver escondidos (0)
+          </button>
+
+          <button id="btnToggleWa" class="btn-action" onclick="alternarWhatsapp()">
+            📱 Mostrar WhatsApp: OFF
+          </button>
+        </div>
+
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <button
+            id="btnReclassificarTudo"
+            class="btn-action btn-reclassificar"
+            onclick="iniciarReclassificacaoTudo()"
+          >
+            🔄 Reclassificar tudo
+          </button>
+
+          <button
+            id="btnLimparResultados"
+            class="btn-action btn-clear-db"
+            onclick="limparResultadosBanco()"
+          >
+            🗑️ Limpar resultados
+          </button>
+        </div>
+      </div>
+
+      <div id="gridResultados" class="cards-grid"></div>
+    </section>
+
+    <!-- ==========================================
+         ABA 3: FAVORITAS ⭐
+    =========================================== -->
+    <section id="secFavoritas" class="tab-section">
+      <div class="filters-bar">
+        <div id="contadorFavoritasTopo" class="fav-summary-counter">
+          0 favoritas, 0 modelando
+        </div>
+
+        <div class="filters-group" style="flex: 0 0 auto;">
+          <div class="filter-item">
+            <label for="filtroStatusFav">Filtrar por status</label>
+            <select id="filtroStatusFav" onchange="renderizarFavoritas()">
+              <option value="TODOS">Todos os status</option>
+              <option value="Analisar">Analisar</option>
+              <option value="Modelando">Modelando</option>
+              <option value="Descartada">Descartada</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div id="gridFavoritas" class="cards-grid"></div>
+    </section>
+  </div>
+
+  <script>
+    let listaResultados = [];
+    let listaFavoritas = [];
+    let mostrarWhatsapp = false;
+    let soLowTicket = true; // LIGADO por padrão
+    let vendoEscondidos = false;
+    const timersNotas = {};
+    const detalhesAbertos = new Set();
+    // Guarda qual índice de criativo está selecionado por card (chaveUnica -> indice)
+    const indiceCriativoPorCard = {};
+
+    // Navegação entre abas
+    function mudarAba(aba) {
+      document.querySelectorAll('.tab-btn').forEach((b) => b.classList.remove('active'));
+      document.querySelectorAll('.tab-section').forEach((s) => s.classList.remove('active'));
+
+      if (aba === 'minerar') {
+        document.getElementById('tabBtnMinerar').classList.add('active');
+        document.getElementById('secMinerar').classList.add('active');
+      } else if (aba === 'resultados') {
+        document.getElementById('tabBtnResultados').classList.add('active');
+        document.getElementById('secResultados').classList.add('active');
+        carregarResultados();
+      } else if (aba === 'favoritas') {
+        document.getElementById('tabBtnFavoritas').classList.add('active');
+        document.getElementById('secFavoritas').classList.add('active');
+        carregarFavoritas();
+      }
+    }
+
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function formatarMoedaBR(val) {
+      if (val === null || val === undefined || isNaN(val)) return null;
+      return 'R$ ' + Number(val).toFixed(2).replace('.', ',');
+    }
+
+    function formatarFaixaPreco(precoMin, precoMax) {
+      const pMin = formatarMoedaBR(precoMin);
+      const pMax = formatarMoedaBR(precoMax);
+      if (!pMin) return null;
+      if (!pMax || Number(precoMin) === Number(precoMax)) return pMin;
+      return `${pMin} a ${pMax}`;
+    }
+
+    function toggleDetalhesCard(chaveUnica) {
+      const drawer = document.getElementById('drawer_' + chaveUnica);
+      const btn = document.getElementById('btnDet_' + chaveUnica);
+      if (!drawer || !btn) return;
+
+      if (drawer.classList.contains('open')) {
+        drawer.classList.remove('open');
+        btn.textContent = '+ detalhes';
+        detalhesAbertos.delete(chaveUnica);
+      } else {
+        drawer.classList.add('open');
+        btn.textContent = '− detalhes';
+        detalhesAbertos.add(chaveUnica);
+      }
+    }
+
+    // Monta o HTML do bloco de criativo (9:16 no topo do card)
+    function montarBlocoCriativoHtml(chaveCard, pageId, listaCriativos) {
+      const criativos = Array.isArray(listaCriativos) ? listaCriativos : [];
+      const total = criativos.length;
+
+      if (total === 0) {
+        return `
+          <div class="creative-section" id="secCriativo_${chaveCard}">
+            <div class="creative-frame" id="frame_${chaveCard}">
+              <div class="creative-expired-box">
+                <span>Sem prévia salva</span>
+                <button
+                  class="btn-refresh-creative"
+                  onclick="solicitarAtualizarCriativo('${escapeHtml(pageId)}', '${chaveCard}', this)"
+                >
+                  🔄 Atualizar criativo
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      let idx = indiceCriativoPorCard[chaveCard] || 0;
+      if (idx < 0 || idx >= total) idx = 0;
+      indiceCriativoPorCard[chaveCard] = idx;
+
+      const atual = criativos[idx] || {};
+      const videoUrl = atual.video_url || null;
+      const thumbUrl = atual.thumb_url || atual.imagem_url || null;
+      const imagemUrl = atual.imagem_url || atual.thumb_url || null;
+
+      let conteudoFrame = '';
+      if (videoUrl) {
+        // Mostra a thumb com ícone ▶; o vídeo só carrega quando clicar
+        const posterImg = thumbUrl
+          ? `<img
+              class="creative-media"
+              src="${escapeHtml(thumbUrl)}"
+              alt="Thumb do vídeo"
+              onerror="mostrarBotaoCriativoVencido('${chaveCard}', '${escapeHtml(pageId)}')"
+            />`
+          : `<div style="width:100%;height:100%;background:#0a1020;"></div>`;
+
+        conteudoFrame = `
+          <div
+            class="creative-video-thumb-wrap"
+            onclick="tocarVideoNoCard('${chaveCard}', '${encodeURIComponent(videoUrl)}', '${escapeHtml(pageId)}')"
+            title="Clique para tocar o vídeo"
+          >
+            ${posterImg}
+            <div class="play-overlay-btn">▶</div>
+          </div>
+        `;
+      } else if (imagemUrl) {
+        conteudoFrame = `
+          <img
+            class="creative-media"
+            src="${escapeHtml(imagemUrl)}"
+            alt="Criativo"
+            onerror="mostrarBotaoCriativoVencido('${chaveCard}', '${escapeHtml(pageId)}')"
+          />
+        `;
+      } else {
+        conteudoFrame = `
+          <div class="creative-expired-box">
+            <span>Link expirado</span>
+            <button
+              class="btn-refresh-creative"
+              onclick="solicitarAtualizarCriativo('${escapeHtml(pageId)}', '${chaveCard}', this)"
+            >
+              🔄 Atualizar criativo
+            </button>
+          </div>
+        `;
+      }
+
+      const urlDownload = videoUrl || imagemUrl || '';
+      const tipoDownload = videoUrl ? 'video' : 'imagem';
+      const hrefDownload = urlDownload
+        ? `/api/download-criativo?url=${encodeURIComponent(urlDownload)}&page_id=${encodeURIComponent(
+            pageId
+          )}&tipo=${tipoDownload}`
+        : '';
+
+      const setasHtml =
+        total > 1
+          ? `
+            <button class="btn-nav-arrow" onclick="navegarCriativo('${chaveCard}', -1)" title="Criativo anterior">◀</button>
+            <span class="creative-counter">${idx + 1}/${total}</span>
+            <button class="btn-nav-arrow" onclick="navegarCriativo('${chaveCard}', 1)" title="Próximo criativo">▶</button>
+          `
+          : '';
+
+      const btnBaixarHtml = hrefDownload
+        ? `<a class="btn-download-creative" href="${hrefDownload}" download>⬇️ Baixar</a>`
+        : '';
+
+      return `
+        <div class="creative-section" id="secCriativo_${chaveCard}">
+          <div class="creative-frame" id="frame_${chaveCard}">
+            ${conteudoFrame}
+          </div>
+          <div class="creative-controls-bar">
+            ${setasHtml}
+            ${btnBaixarHtml}
+          </div>
+        </div>
+      `;
+    }
+
+    // Ao clicar na thumb, carrega e toca o vídeo com som e controles no próprio card
+    function tocarVideoNoCard(chaveCard, encodedVideoUrl, pageId) {
+      const frame = document.getElementById('frame_' + chaveCard);
+      if (!frame) return;
+      const videoUrl = decodeURIComponent(encodedVideoUrl);
+
+      frame.innerHTML = `
+        <video
+          class="creative-media"
+          src="${escapeHtml(videoUrl)}"
+          controls
+          autoplay
+          playsinline
+          onerror="mostrarBotaoCriativoVencido('${chaveCard}', '${escapeHtml(pageId)}')"
+        ></video>
+      `;
+    }
+
+    // Se a thumb, imagem ou vídeo falhar ao carregar (link vencido)
+    function mostrarBotaoCriativoVencido(chaveCard, pageId) {
+      const frame = document.getElementById('frame_' + chaveCard);
+      if (!frame) return;
+      frame.innerHTML = `
+        <div class="creative-expired-box">
+          <span>Criativo expirado</span>
+          <button
+            class="btn-refresh-creative"
+            onclick="solicitarAtualizarCriativo('${escapeHtml(pageId)}', '${chaveCard}', this)"
+          >
+            🔄 Atualizar criativo
+          </button>
+        </div>
+      `;
+    }
+
+    function navegarCriativo(chaveCard, delta) {
+      const isFav = chaveCard.startsWith('fav_');
+      const pid = chaveCard.replace(/^(res_|fav_)/, '');
+
+      if (isFav) {
+        renderizarFavoritas();
+        return;
+      }
+
+      const item = listaResultados.find(
+        (r) => String(r.page_id).replace(/\W/g, '') === pid
+      );
+      if (!item || !Array.isArray(item.criativos) || item.criativos.length === 0) return;
+
+      const total = item.criativos.length;
+      const atual = indiceCriativoPorCard[chaveCard] || 0;
+      indiceCriativoPorCard[chaveCard] = (atual + delta + total) % total;
+
+      const sec = document.getElementById('secCriativo_' + chaveCard);
+      if (sec) {
+        sec.outerHTML = montarBlocoCriativoHtml(chaveCard, item.page_id, item.criativos);
+      }
+    }
+
+    async function solicitarAtualizarCriativo(pageId, chaveCard, btnEl) {
+      if (btnEl) {
+        btnEl.disabled = true;
+        btnEl.textContent = '⏳ Buscando...';
+      }
+      try {
+        const res = await fetch(`/api/atualizar-criativo/${encodeURIComponent(pageId)}`, {
+          method: 'POST',
+        });
+        const json = await res.json();
+        if (!res.ok || !json.ok) {
+          if (json.rateLimit) {
+            exibirAvisoVermelho('Facebook pediu pausa, espere alguns minutos.', true);
+          }
+          alert(json.erro || 'Não foi possível atualizar o criativo agora.');
+          if (btnEl) {
+            btnEl.disabled = false;
+            btnEl.textContent = '🔄 Atualizar criativo';
+          }
+          return;
+        }
+        await carregarResultados();
+        await carregarFavoritas();
+      } catch (err) {
+        alert('Erro de comunicação ao atualizar criativo.');
+        if (btnEl) {
+          btnEl.disabled = false;
+          btnEl.textContent = '🔄 Atualizar criativo';
+        }
+      }
+    }
+
+    function exibirAvisoVermelho(msg, isRateLimit = false) {
+      const box = document.getElementById('boxAvisoVermelho');
+      if (!msg) {
+        box.style.display = 'none';
+        box.textContent = '';
+        return;
+      }
+      box.style.display = 'block';
+      if (isRateLimit || msg.toLowerCase().includes('rate limit')) {
+        box.textContent = '⚠️ Facebook pediu pausa, espere alguns minutos.';
+      } else {
+        box.textContent = '⚠️ ' + msg;
+      }
+    }
+
+    function atualizarBarraEProgresso(d) {
+      const indPalavra = d.indicePalavra || 0;
+      const totPalavras = d.totalPalavras || 0;
+      const pagAtual = d.paginaAtual || 0;
+      const maxPag = d.maxPaginas || 10;
+
+      document.getElementById('cardPalavraIndice').textContent =
+        totPalavras > 0 ? `${indPalavra} de ${totPalavras}` : '0 de 0';
+      document.getElementById('cardPalavraTexto').textContent =
+        d.palavraAtual ? `"${d.palavraAtual}"` : 'Nenhuma em execução';
+      document.getElementById('cardPaginaAtual').textContent = `${pagAtual} de ${maxPag}`;
+      document.getElementById('cardSalvos').textContent = d.totalSalvosSessao || 0;
+      document.getElementById('cardDescartados').textContent = d.totalDescartadosSessao || 0;
+
+      let pct = 0;
+      if (totPalavras > 0 && maxPag > 0) {
+        const concluidasAntes = Math.max(0, indPalavra - 1) * maxPag;
+        const progressoAtual = concluidasAntes + pagAtual;
+        pct = Math.min(100, Math.round((progressoAtual / (totPalavras * maxPag)) * 100));
+      }
+      document.getElementById('barraProgresso').style.width = `${pct}%`;
+    }
+
+    function definirEstadoBotaoMinerar(minerando) {
+      const btn = document.getElementById('btnMinerar');
+      const pill = document.getElementById('statusPill');
+      btn.disabled = minerando;
+      btn.innerHTML = minerando ? '⏳ MINERANDO...' : '🔍 MINERAR AGORA';
+
+      if (minerando) {
+        pill.className = 'status-pill running';
+        pill.textContent = 'Minerando em tempo real...';
+      }
+    }
+
+    // Conexão Server-Sent Events (SSE)
+    function iniciarSSE() {
+      const es = new EventSource('/api/progresso');
+
+      es.addEventListener('estado', (e) => {
+        const d = JSON.parse(e.data);
+        definirEstadoBotaoMinerar(Boolean(d.minerando));
+        atualizarBarraEProgresso(d);
+        if (d.ultimoAviso) {
+          exibirAvisoVermelho(d.ultimoAviso, d.rateLimit);
+        }
+      });
+
+      es.addEventListener('inicio', (e) => {
+        const d = JSON.parse(e.data);
+        exibirAvisoVermelho(null);
+        document.getElementById('bannerConcluido').style.display = 'none';
+        definirEstadoBotaoMinerar(true);
+        atualizarBarraEProgresso(d);
+        document.getElementById('legendaProgresso').textContent = d.mensagem || 'Iniciando...';
+      });
+
+      es.addEventListener('progresso', (e) => {
+        const d = JSON.parse(e.data);
+        definirEstadoBotaoMinerar(true);
+        atualizarBarraEProgresso(d);
+
+        if (d.mensagem) {
+          document.getElementById('legendaProgresso').textContent = d.mensagem;
+        }
+
+        if (d.tipo === 'rate_limit') {
+          const pill = document.getElementById('statusPill');
+          pill.className = 'status-pill error';
+          pill.textContent = 'Pausa solicitada';
+          exibirAvisoVermelho('Facebook pediu pausa, espere alguns minutos.', true);
+        } else if (d.tipo === 'erro') {
+          exibirAvisoVermelho(d.mensagem, false);
+        } else if (d.tipo === 'pagina' || d.tipo === 'classificando_pagina') {
+          carregarResultados();
+        }
+      });
+
+      es.addEventListener('fim', (e) => {
+        const d = JSON.parse(e.data);
+        definirEstadoBotaoMinerar(false);
+        document.getElementById('barraProgresso').style.width = '100%';
+
+        const pill = document.getElementById('statusPill');
+        if (d.rateLimit) {
+          pill.className = 'status-pill error';
+          pill.textContent = 'Pausado pelo Facebook';
+          exibirAvisoVermelho('Facebook pediu pausa, espere alguns minutos.', true);
+        } else {
+          pill.className = 'status-pill done';
+          pill.textContent = 'Concluído!';
+        }
+
+        const qtdNovos = typeof d.novosAnunciantes === 'number' ? d.novosAnunciantes : 0;
+        const msgFinal = `Mineração concluída: ${qtdNovos} anunciantes novos`;
+        document.getElementById('textoConcluido').textContent = msgFinal;
+        document.getElementById('bannerConcluido').style.display = 'flex';
+        document.getElementById('legendaProgresso').textContent = msgFinal;
+
+        carregarResultados();
+      });
+
+      es.addEventListener('reclassificacao_inicio', (e) => {
+        const d = JSON.parse(e.data);
+        const banner = document.getElementById('bannerReclassificacao');
+        banner.style.display = 'flex';
+        document.getElementById('btnReclassificarTudo').disabled = true;
+        document.getElementById('textoReclassificacao').textContent = d.mensagem;
+        document.getElementById('contadorReclassificacao').textContent = 'Iniciando...';
+        document.getElementById('barraReclassificacao').style.width = '0%';
+      });
+
+      es.addEventListener('reclassificacao_progresso', (e) => {
+        const d = JSON.parse(e.data);
+        const banner = document.getElementById('bannerReclassificacao');
+        banner.style.display = 'flex';
+        document.getElementById('textoReclassificacao').textContent = d.mensagem;
+        document.getElementById('contadorReclassificacao').textContent = `${d.atual} / ${d.total}`;
+        const pct = d.total > 0 ? Math.round((d.atual / d.total) * 100) : 0;
+        document.getElementById('barraReclassificacao').style.width = `${pct}%`;
+        if (d.atual % 3 === 0 || d.atual === d.total) {
+          carregarResultados();
+        }
+      });
+
+      es.addEventListener('reclassificacao_fim', (e) => {
+        const d = JSON.parse(e.data);
+        document.getElementById('btnReclassificarTudo').disabled = false;
+        document.getElementById('textoReclassificacao').textContent = d.mensagem;
+        document.getElementById('barraReclassificacao').style.width = '100%';
+        carregarResultados();
+      });
+
+      es.addEventListener('limpo', () => {
+        carregarResultados();
+      });
+    }
+
+    async function iniciarMineracao() {
+      const raw = document.getElementById('inputPalavras').value || '';
+      const palavras = raw
+        .split(/\r?\n/)
+        .map((p) => p.trim())
+        .filter(Boolean);
+
+      if (palavras.length === 0) {
+        alert('Por favor, digite pelo menos uma palavra-chave no passo 1.');
+        return;
+      }
+
+      let paginasPorPalavra = parseInt(document.getElementById('inputPaginas').value, 10);
+      if (isNaN(paginasPorPalavra) || paginasPorPalavra < 1) paginasPorPalavra = 10;
+      if (paginasPorPalavra > 20) {
+        paginasPorPalavra = 20;
+        document.getElementById('inputPaginas').value = 20;
+      }
+
+      exibirAvisoVermelho(null);
+      document.getElementById('bannerConcluido').style.display = 'none';
+      definirEstadoBotaoMinerar(true);
+
+      try {
+        const res = await fetch('/api/minerar', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ palavras, paginasPorPalavra }),
+        });
+        const json = await res.json();
+        if (!res.ok || !json.ok) {
+          definirEstadoBotaoMinerar(false);
+          exibirAvisoVermelho(json.erro || 'Não foi possível iniciar a mineração.');
+        }
+      } catch (err) {
+        definirEstadoBotaoMinerar(false);
+        exibirAvisoVermelho('Erro de comunicação com o servidor.');
+      }
+    }
+
+    function alternarFiltroLowTicket() {
+      soLowTicket = !soLowTicket;
+      if (vendoEscondidos) {
+        vendoEscondidos = false;
+      }
+      atualizarBotoesFiltroLowTicket();
+      renderizarResultados();
+    }
+
+    function alternarVerEscondidos() {
+      vendoEscondidos = !vendoEscondidos;
+      atualizarBotoesFiltroLowTicket();
+      renderizarResultados();
+    }
+
+    function atualizarBotoesFiltroLowTicket() {
+      const btnLow = document.getElementById('btnFiltroLowTicket');
+      const btnEsc = document.getElementById('btnVerEscondidos');
+
+      if (soLowTicket && !vendoEscondidos) {
+        btnLow.classList.add('active-lowticket');
+        btnLow.textContent = '🎯 Só LOW TICKET: ON';
+      } else {
+        btnLow.classList.remove('active-lowticket');
+        btnLow.textContent = `🎯 Só LOW TICKET: ${soLowTicket ? 'ON' : 'OFF'}`;
+      }
+
+      if (vendoEscondidos) {
+        btnEsc.classList.add('active-hidden');
+      } else {
+        btnEsc.classList.remove('active-hidden');
+      }
+    }
+
+    function alternarWhatsapp() {
+      mostrarWhatsapp = !mostrarWhatsapp;
+      const btn = document.getElementById('btnToggleWa');
+      if (mostrarWhatsapp) {
+        btn.classList.add('active-wa');
+        btn.textContent = '📱 Mostrar WhatsApp: ON';
+      } else {
+        btn.classList.remove('active-wa');
+        btn.textContent = '📱 Mostrar WhatsApp: OFF';
+      }
+      renderizarResultados();
+    }
+
+    async function iniciarReclassificacaoTudo() {
+      try {
+        const res = await fetch('/api/reclassificar', { method: 'POST' });
+        const json = await res.json();
+        if (!res.ok || !json.ok) {
+          alert(json.erro || 'Não foi possível iniciar a reclassificação.');
+        }
+      } catch (err) {
+        alert('Erro de comunicação com o servidor.');
+      }
+    }
+
+    async function carregarResultados() {
+      try {
+        const res = await fetch('/api/resultados');
+        const json = await res.json();
+        if (json.ok) {
+          listaResultados = json.resultados || [];
+          renderizarResultados();
+          if (document.getElementById('secFavoritas').classList.contains('active')) {
+            renderizarFavoritas();
+          }
+        }
+      } catch (err) {
+        console.error('Erro ao buscar resultados:', err);
+      }
+    }
+
+    function isItemPassaLowTicket(item) {
+      if (item.tipo === 'whatsapp') return true;
+      const t = item.tipo_oferta || 'sem_preco';
+      return t === 'low_ticket' || t === 'sem_preco';
+    }
+
+    function isInfoproduto(tipoOferta) {
+      return tipoOferta !== 'loja';
+    }
+
+    function renderizarResultados() {
+      const grid = document.getElementById('gridResultados');
+      const busca = (document.getElementById('filtroBusca').value || '').trim().toLowerCase();
+      const ordenarPor = document.getElementById('filtroOrdenar').value || 'max_dias_rodando';
+      const diasMin = parseInt(document.getElementById('filtroDiasMin').value, 10) || 0;
+
+      const totalEscondidos = listaResultados.filter((item) => !isItemPassaLowTicket(item)).length;
+      document.getElementById('btnVerEscondidos').textContent = vendoEscondidos
+        ? `👁️ Vendo escondidos (${totalEscondidos})`
+        : `👁️ Ver escondidos (${totalEscondidos})`;
+
+      let filtrados = listaResultados.filter((item) => {
+        if (!mostrarWhatsapp && item.tipo === 'whatsapp') return false;
+        if ((Number(item.max_dias_rodando) || 0) < diasMin) return false;
+        if (busca && !(item.page_name || '').toLowerCase().includes(busca)) return false;
+
+        if (vendoEscondidos) {
+          return !isItemPassaLowTicket(item);
+        }
+
+        if (soLowTicket) {
+          if (mostrarWhatsapp && item.tipo === 'whatsapp') return true;
+          return isItemPassaLowTicket(item);
+        }
+
+        return true;
+      });
+
+      document.getElementById('badgeCountResultados').textContent = filtrados.length;
+
+      filtrados.sort((a, b) => {
+        const valA = Number(a[ordenarPor]) || 0;
+        const valB = Number(b[ordenarPor]) || 0;
+        return valB - valA;
+      });
+
+      if (filtrados.length === 0) {
+        grid.innerHTML = `<div class="empty-state">${
+          vendoEscondidos
+            ? 'Nenhum anunciante escondido pelo filtro no momento.'
+            : 'Nenhum anunciante encontrado com esses filtros.'
+        }</div>`;
+        return;
+      }
+
+      grid.innerHTML = filtrados
+        .map((item) => {
+          const dias = Number(item.max_dias_rodando) || 0;
+          const ativos = Number(item.anuncios_salvos) || 0;
+          const dup = Number(item.maior_duplicacao) || 1;
+          const isWa = item.tipo === 'whatsapp';
+          const tipoOferta = item.tipo_oferta || 'sem_preco';
+          const isEscondido = !isItemPassaLowTicket(item);
+          const infoDigital = isInfoproduto(tipoOferta);
+
+          const chaveDet = 'res_' + String(item.page_id).replace(/\W/g, '');
+          const estaAberto = detalhesAbertos.has(chaveDet);
+
+          const selos = [];
+          if (isWa) selos.push(`<span class="seal seal-lowticket">💬 WhatsApp</span>`);
+          if (dias >= 30) selos.push(`<span class="seal seal-validada">🔥 Validada</span>`);
+          if (dias <= 7) selos.push(`<span class="seal seal-nova">🆕 Nova</span>`);
+          if (dup >= 5) selos.push(`<span class="seal seal-escalando">📈 Escalando</span>`);
+          if (!isWa && tipoOferta === 'low_ticket') {
+            selos.push(`<span class="seal seal-lowticket">✅ Low Ticket</span>`);
+          } else if (isWa || tipoOferta === 'sem_preco') {
+            selos.push(`<span class="seal seal-sempreco">⚠️ a conferir</span>`);
+          } else if (isEscondido) {
+            const motivoExibir =
+              item.motivo_filtro ||
+              (tipoOferta === 'caro'
+                ? `caro: ${formatarMoedaBR(item.preco_min) || 'acima de R$ 47'}`
+                : 'loja: e-commerce');
+            selos.push(
+              `<span class="seal seal-escondido-motivo">🚫 ${escapeHtml(motivoExibir)}</span>`
+            );
+          }
+
+          const faixaPreco = formatarFaixaPreco(item.preco_min, item.preco_max);
+          const textoPreco = isWa
+            ? 'a conferir'
+            : faixaPreco
+            ? faixaPreco
+            : tipoOferta === 'sem_preco'
+            ? 'a conferir'
+            : 'Não identificado';
+
+          const bibUrl = `https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=BR&view_all_page_id=${encodeURIComponent(
+            item.page_id
+          )}&search_type=page&media_type=all`;
+
+          let linkPagina = item.link_url || '';
+          if (isWa) {
+            // No card do WhatsApp, o botão "Página" vira "Biblioteca"
+            linkPagina = bibUrl;
+          }
+
+          const btnPaginaHtml = isWa
+            ? `<a class="btn-card-main btn-pag" href="${bibUrl}" target="_blank" rel="noopener noreferrer">Biblioteca</a>`
+            : linkPagina
+            ? `<a class="btn-card-main btn-pag" href="${escapeHtml(
+                linkPagina
+              )}" target="_blank" rel="noopener noreferrer">Página</a>`
+            : `<span class="btn-card-main btn-pag-disabled">Página</span>`;
+
+          const classeSeloTipo = isWa
+            ? 'whatsapp'
+            : infoDigital
+            ? 'digital'
+            : 'outro';
+
+          const textoSeloTipo = isWa
+            ? '💬 WhatsApp'
+            : infoDigital
+            ? '📄 PDF / Digital'
+            : 'Outro';
+
+          const isFav = Boolean(item.favorito);
+          const itemPayload = encodeURIComponent(
+            JSON.stringify({
+              page_id: item.page_id,
+              nome: item.page_name,
+              link_pagina: linkPagina,
+              link_biblioteca: bibUrl,
+              dias_rodando: dias,
+              video_url: item.video_url || null,
+              thumb_url: item.thumb_url || null,
+              imagem_url: item.imagem_url || null,
+            })
+          );
+
+          const blocoCriativoHtml = montarBlocoCriativoHtml(
+            chaveDet,
+            item.page_id,
+            item.criativos || []
+          );
+
+          return `
+            <div class="ad-card ${isEscondido ? 'card-escondido' : ''}" data-page-id="${escapeHtml(
+            item.page_id
+          )}">
+              <!-- 5. Estrelinha pequena no canto para favoritar -->
+              <button
+                class="star-corner-btn ${isFav ? 'is-fav' : ''}"
+                title="${isFav ? 'Favoritada' : 'Favoritar'}"
+                onclick="favoritarAnunciante('${itemPayload}')"
+              >
+                ⭐
+              </button>
+
+              <!-- Criativo em cima (9:16 pequeno e fixo) -->
+              ${blocoCriativoHtml}
+
+              <!-- 1. Nome da oferta + 2. Selo de tipo -->
+              <div>
+                <div class="offer-title">${escapeHtml(item.page_name || 'Anunciante')}</div>
+                <span class="type-badge ${classeSeloTipo}">
+                  ${textoSeloTipo}
+                </span>
+              </div>
+
+              <!-- 3. Status: "🟢 Ativa há X dias" -->
+              <div class="active-status-line">
+                🟢 Ativa há ${dias} dias
+              </div>
+
+              <!-- 4. Dois botões lado a lado: "Biblioteca" e "Página" (ou "Biblioteca" se for WhatsApp) -->
+              <div class="card-buttons-row">
+                <a class="btn-card-main btn-bib" href="${bibUrl}" target="_blank" rel="noopener noreferrer">
+                  Biblioteca
+                </a>
+                ${btnPaginaHtml}
+              </div>
+
+              <!-- Rodapé "+ detalhes" fechado por padrão -->
+              <div class="details-footer">
+                <button
+                  id="btnDet_${chaveDet}"
+                  class="details-toggle-link"
+                  onclick="toggleDetalhesCard('${chaveDet}')"
+                >
+                  ${estaAberto ? '− detalhes' : '+ detalhes'}
+                </button>
+
+                <div id="drawer_${chaveDet}" class="details-drawer ${estaAberto ? 'open' : ''}">
+                  <div class="detail-row">
+                    <span class="detail-label">Preço</span>
+                    <span class="detail-val">${escapeHtml(textoPreco)}</span>
+                  </div>
+                  ${
+                    isWa
+                      ? `<div class="detail-row">
+                          <span class="detail-label">Número WhatsApp</span>
+                          <span class="detail-val">${escapeHtml(item.whatsapp || 'Oculto no botão')}</span>
+                        </div>`
+                      : `<div class="detail-row">
+                          <span class="detail-label">Checkout</span>
+                          <span class="detail-val">${escapeHtml(item.checkout || 'Não identificado')}</span>
+                        </div>`
+                  }
+                  <div class="detail-row">
+                    <span class="detail-label">Anúncios salvos / Maior dup.</span>
+                    <span class="detail-val">${ativos} salvos (${dup}x)</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="detail-label">Palavra-chave</span>
+                    <span class="detail-val">${escapeHtml(item.palavra_chave || '—')}</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="detail-label">Raio-X / Filtro</span>
+                    <span class="detail-val">${escapeHtml(item.motivo_filtro || tipoOferta)}</span>
+                  </div>
+                  ${selos.length > 0 ? `<div class="badges-row">${selos.join('')}</div>` : ''}
+                </div>
+              </div>
+            </div>
+          `;
+        })
+        .join('');
+    }
+
+    async function favoritarAnunciante(encodedPayload) {
+      try {
+        const dados = JSON.parse(decodeURIComponent(encodedPayload));
+        const res = await fetch('/api/favoritos', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(dados),
+        });
+        const json = await res.json();
+        if (json.ok) {
+          await carregarFavoritas();
+          await carregarResultados();
+        }
+      } catch (err) {
+        console.error('Erro ao favoritar:', err);
+      }
+    }
+
+    async function carregarFavoritas() {
+      try {
+        const res = await fetch('/api/favoritos');
+        const json = await res.json();
+        if (json.ok) {
+          listaFavoritas = json.favoritos || [];
+          atualizarContadoresFavoritas();
+          renderizarFavoritas();
+        }
+      } catch (err) {
+        console.error('Erro ao carregar favoritas:', err);
+      }
+    }
+
+    function atualizarContadoresFavoritas() {
+      const total = listaFavoritas.length;
+      const modelando = listaFavoritas.filter((f) => f.status === 'Modelando').length;
+      document.getElementById('badgeCountFavoritas').textContent = total;
+      document.getElementById('contadorFavoritasTopo').textContent =
+        `${total} favorita${total === 1 ? '' : 's'}, ${modelando} modelando`;
+    }
+
+    function renderizarFavoritas() {
+      const grid = document.getElementById('gridFavoritas');
+      const statusFiltro = document.getElementById('filtroStatusFav').value || 'TODOS';
+
+      const filtradas = listaFavoritas.filter((item) => {
+        if (statusFiltro === 'TODOS') return true;
+        return item.status === statusFiltro;
+      });
+
+      if (filtradas.length === 0) {
+        grid.innerHTML = `<div class="empty-state">Nenhuma favorita encontrada neste filtro.</div>`;
+        return;
+      }
+
+      const mapaRes = new Map(listaResultados.map((r) => [String(r.page_id), r]));
+
+      grid.innerHTML = filtradas
+        .map((fav) => {
+          const extra = mapaRes.get(String(fav.page_id)) || {};
+          const dias = Number(fav.dias_rodando) || Number(extra.max_dias_rodando) || 0;
+          const isWa =
+            extra.tipo === 'whatsapp' ||
+            (fav.link_pagina && fav.link_pagina.includes('facebook.com/ads/library'));
+          const tipoOferta = extra.tipo_oferta || 'low_ticket';
+          const infoDigital = isInfoproduto(tipoOferta);
+
+          const chaveDet = 'fav_' + String(fav.page_id).replace(/\W/g, '');
+          const estaAberto = detalhesAbertos.has(chaveDet);
+
+          const dataFormatada = fav.data_favorito
+            ? new Date(fav.data_favorito).toLocaleDateString('pt-BR')
+            : '—';
+
+          const faixaPreco = formatarFaixaPreco(extra.preco_min, extra.preco_max);
+          const textoPreco = isWa ? 'a conferir' : faixaPreco || 'a conferir';
+
+          const btnPaginaHtml = isWa
+            ? `<a class="btn-card-main btn-pag" href="${escapeHtml(
+                fav.link_biblioteca
+              )}" target="_blank" rel="noopener noreferrer">Biblioteca</a>`
+            : fav.link_pagina
+            ? `<a class="btn-card-main btn-pag" href="${escapeHtml(
+                fav.link_pagina
+              )}" target="_blank" rel="noopener noreferrer">Página</a>`
+            : `<span class="btn-card-main btn-pag-disabled">Página</span>`;
+
+          const classeSeloTipo = isWa
+            ? 'whatsapp'
+            : infoDigital
+            ? 'digital'
+            : 'outro';
+
+          const textoSeloTipo = isWa
+            ? '💬 WhatsApp'
+            : infoDigital
+            ? '📄 PDF / Digital'
+            : 'Outro';
+
+          // Na aba FAVORITAS usa prioritariamente o arquivo local salvo em data/criativos/PAGE_ID/
+          const criativosFav = [];
+          if (fav.local_video || fav.local_thumb || fav.local_imagem) {
+            criativosFav.push({
+              video_url: fav.local_video || null,
+              thumb_url: fav.local_thumb || null,
+              imagem_url: fav.local_imagem || null,
+            });
+          } else if (Array.isArray(extra.criativos) && extra.criativos.length > 0) {
+            criativosFav.push(...extra.criativos);
+          }
+
+          const blocoCriativoFavHtml = montarBlocoCriativoHtml(
+            chaveDet,
+            fav.page_id,
+            criativosFav
+          );
+
+          return `
+            <div class="ad-card" data-fav-id="${escapeHtml(fav.page_id)}">
+              <!-- 5. Estrelinha pequena no canto -->
+              <button
+                class="star-corner-btn is-fav"
+                title="Remover das favoritas"
+                onclick="removerFavorita('${escapeHtml(fav.page_id)}')"
+              >
+                ⭐
+              </button>
+
+              <!-- Criativo em cima (usando arquivo local salvo em data/criativos/PAGE_ID/) -->
+              ${blocoCriativoFavHtml}
+
+              <!-- 1. Nome da oferta + 2. Selo de tipo -->
+              <div>
+                <div class="offer-title">${escapeHtml(fav.nome || 'Anunciante')}</div>
+                <span class="type-badge ${classeSeloTipo}">
+                  ${textoSeloTipo}
+                </span>
+              </div>
+
+              <!-- 3. Status: "🟢 Ativa há X dias" -->
+              <div class="active-status-line">
+                🟢 Ativa há ${dias} dias
+              </div>
+
+              <!-- 4. Dois botões lado a lado: "Biblioteca" e "Página" -->
+              <div class="card-buttons-row">
+                <a class="btn-card-main btn-bib" href="${escapeHtml(
+                  fav.link_biblioteca
+                )}" target="_blank" rel="noopener noreferrer">
+                  Biblioteca
+                </a>
+                ${btnPaginaHtml}
+              </div>
+
+              <!-- Rodapé "+ detalhes" fechado por padrão -->
+              <div class="details-footer">
+                <button
+                  id="btnDet_${chaveDet}"
+                  class="details-toggle-link"
+                  onclick="toggleDetalhesCard('${chaveDet}')"
+                >
+                  ${estaAberto ? '− detalhes' : '+ detalhes'}
+                </button>
+
+                <div id="drawer_${chaveDet}" class="details-drawer ${estaAberto ? 'open' : ''}">
+                  <div class="detail-row">
+                    <span class="detail-label">Favoritada em</span>
+                    <span class="detail-val">${dataFormatada}</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="detail-label">Preço</span>
+                    <span class="detail-val">${escapeHtml(textoPreco)}</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="detail-label">Checkout</span>
+                    <span class="detail-val">${escapeHtml(extra.checkout || 'Não identificado')}</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="detail-label">Duplicação máx.</span>
+                    <span class="detail-val">${Number(extra.maior_duplicacao) || 1}x</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="detail-label">Palavra-chave</span>
+                    <span class="detail-val">${escapeHtml(extra.palavra_chave || '—')}</span>
+                  </div>
+
+                  <div class="fav-status-row">
+                    <select
+                      class="fav-status-select"
+                      onchange="atualizarStatusFavorita('${escapeHtml(fav.page_id)}', this.value)"
+                    >
+                      <option value="Analisar" ${fav.status === 'Analisar' ? 'selected' : ''}>🔎 Analisar</option>
+                      <option value="Modelando" ${fav.status === 'Modelando' ? 'selected' : ''}>🛠️ Modelando</option>
+                      <option value="Descartada" ${fav.status === 'Descartada' ? 'selected' : ''}>❌ Descartada</option>
+                    </select>
+
+                    <button class="btn-remove-fav" onclick="removerFavorita('${escapeHtml(fav.page_id)}')">
+                      🗑️ Remover
+                    </button>
+                  </div>
+
+                  <div>
+                    <textarea
+                      class="fav-note-textarea"
+                      placeholder="Escreva suas anotações sobre esta oferta (salva sozinho)..."
+                      oninput="agendarSalvarNota('${escapeHtml(fav.page_id)}', this.value)"
+                    >${escapeHtml(fav.nota || '')}</textarea>
+                    <div id="saveInd_${escapeHtml(fav.page_id)}" class="save-note-indicator"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+        })
+        .join('');
+    }
+
+    function agendarSalvarNota(pageId, notaTexto) {
+      const ind = document.getElementById('saveInd_' + pageId);
+      if (ind) ind.textContent = 'Salvando...';
+
+      if (timersNotas[pageId]) clearTimeout(timersNotas[pageId]);
+      timersNotas[pageId] = setTimeout(async () => {
+        await salvarAlteracaoFavorita(pageId, { nota: notaTexto });
+        if (ind) {
+          ind.textContent = '✓ Nota salva automaticamente';
+          setTimeout(() => {
+            if (ind) ind.textContent = '';
+          }, 2000);
+        }
+      }, 400);
+    }
+
+    async function atualizarStatusFavorita(pageId, novoStatus) {
+      await salvarAlteracaoFavorita(pageId, { status: novoStatus });
+      await carregarFavoritas();
+    }
+
+    async function salvarAlteracaoFavorita(pageId, payload) {
+      try {
+        await fetch(`/api/favoritos/${encodeURIComponent(pageId)}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const item = listaFavoritas.find((f) => String(f.page_id) === String(pageId));
+        if (item) {
+          if (payload.nota !== undefined) item.nota = payload.nota;
+          if (payload.status !== undefined) item.status = payload.status;
+          atualizarContadoresFavoritas();
+        }
+      } catch (err) {
+        console.error('Erro ao atualizar favorita:', err);
+      }
+    }
+
+    async function removerFavorita(pageId) {
+      try {
+        await fetch(`/api/favoritos/${encodeURIComponent(pageId)}`, {
+          method: 'DELETE',
+        });
+        await carregarFavoritas();
+        await carregarResultados();
+      } catch (err) {
+        console.error('Erro ao remover favorita:', err);
+      }
+    }
+
+    async function limparResultadosBanco() {
+      const ok = window.confirm(
+        'Tem certeza que deseja apagar os resultados da busca? (Suas FAVORITAS ⭐ continuarão salvas!)'
+      );
+      if (!ok) return;
+
+      try {
+        const res = await fetch('/api/resultados', { method: 'DELETE' });
+        const json = await res.json();
+        if (json.ok) {
+          await carregarResultados();
+          await carregarFavoritas();
+        } else {
+          alert(json.erro || 'Não foi possível limpar os resultados.');
+        }
+      } catch (err) {
+        alert('Erro de comunicação com o servidor.');
+      }
+    }
+
+    // Inicializar
+    iniciarSSE();
+    carregarResultados();
+    carregarFavoritas();
+  </script>
+</body>
+</html>
