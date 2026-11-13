@@ -14,7 +14,6 @@ COPY public ./public
 
 # Banco e criativos ficam em /app/data (monte um volume aqui)
 RUN mkdir -p /app/data
-VOLUME ["/app/data"]
 
 ENV NODE_ENV=production
 EXPOSE 3000
